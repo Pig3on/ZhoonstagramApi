@@ -1,16 +1,23 @@
 package vua.pavic.ZhoonstagramApi.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.approval.ApprovalStore;
 import org.springframework.security.oauth2.provider.approval.TokenApprovalStore;
@@ -18,63 +25,110 @@ import org.springframework.security.oauth2.provider.approval.TokenStoreUserAppro
 import org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
+import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.OrRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import vua.pavic.ZhoonstagramApi.security.JWTSupport.JWTAuthenticationFilter;
+import vua.pavic.ZhoonstagramApi.security.JWTSupport.JWTLoginFilter;
 import vua.pavic.ZhoonstagramApi.services.JdbcUserDetailService;
 
-@Configuration
-@EnableWebSecurity
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    @Autowired
-    private ClientDetailsService clientDetailsService;
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-    @Autowired
-    private TokenStore tokenStore;
-    @Autowired
-    public void globalUserDetails(AuthenticationManagerBuilder auth) throws Exception {
-        auth.jdbcAuthentication().dataSource(jdbcTemplate.getDataSource())
-                .rolePrefix("ROLE_");
-                //.withUser("marin.pavic@pavic.com")
-              //  .password("$2y$12$5AVziLjUUbWdq6NAra.fleTomvNg3YYjmTIjEdILwuu2Ot/qnpqzK").roles("ADMIN","FREE");
+import javax.sql.DataSource;
+import java.util.Arrays;
 
+@Configuration
+@EnableAutoConfiguration
+@EnableWebSecurity
+@EnableGlobalMethodSecurity(securedEnabled = true)
+
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    private DataSource dataSource;
+
+    @Value("${spring.queries.users-query}")
+    private String usersQuery;
+
+    @Value("${spring.queries.roles-query}")
+    private String rolesQuery;
+
+    @Bean
+    public BCryptPasswordEncoder bCryptPasswordEncoder(){
+        return new BCryptPasswordEncoder();
+    }
+
+    @Autowired
+    public SecurityConfig(@Qualifier("dataSource") DataSource dataSource) {
+        this.dataSource = dataSource;
     }
     @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
+        configuration.setAllowedMethods(Arrays.asList("HEAD", "GET", "PUT", "POST", "DELETE", "PATCH"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization","content-type"));
+        configuration.setExposedHeaders(Arrays.asList("Authorization","content-type"));
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+
     @Override
-    public UserDetailsService userDetailsServiceBean() throws Exception {
-        return new JdbcUserDetailService();
+    public void configure(WebSecurity web)  {
+        web.ignoring().antMatchers(HttpMethod.POST,"/users/");
+
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.headers().frameOptions().disable().and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .csrf().disable()
-                .authorizeRequests()
-                .antMatchers("/about").permitAll()
-                .antMatchers("/signup").permitAll()
-                .antMatchers("/oauth/token").permitAll()
-                .antMatchers("/h2-console").permitAll()
-                .antMatchers("/swagger-ui.html").permitAll()
-                //.antMatchers("/api/**").authenticated()
-                //.antMatchers("/api/**").hasRole("USER")
-                .anyRequest().permitAll();
-    }
 
+        http.cors();
+        http.authorizeRequests()
+                .antMatchers(HttpMethod.POST,"/users/").permitAll()
+                .antMatchers(HttpMethod.POST,"/managedMachines/register").permitAll()
+                .antMatchers("/login").permitAll()
+                .and().
+                addFilterBefore(new JWTLoginFilter("/login"
+                        ,authenticationManager()),UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(tokenFilterCreator(), UsernamePasswordAuthenticationFilter.class)
+                .authorizeRequests().anyRequest().authenticated()
+                .and()
+                .csrf().disable();
+
+        http.exceptionHandling().authenticationEntryPoint(new Http403ForbiddenEntryPoint());
+    }
 
     @Override
-    @Bean
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.jdbcAuthentication().usersByUsernameQuery(usersQuery)
+                .authoritiesByUsernameQuery(rolesQuery)
+                .dataSource(dataSource)
+                .passwordEncoder(bCryptPasswordEncoder());
+
+
+
     }
 
+
+
     @Bean
-    @Autowired
-    public TokenStoreUserApprovalHandler userApprovalHandler(TokenStore tokenStore){
-        TokenStoreUserApprovalHandler handler = new TokenStoreUserApprovalHandler();
-        handler.setTokenStore(tokenStore);
-        handler.setRequestFactory(new DefaultOAuth2RequestFactory(clientDetailsService));
-        handler.setClientDetailsService(clientDetailsService);
-        return handler;
+    public JWTAuthenticationFilter tokenFilterCreator(){
+
+        RequestMatcher matcherRegister = new AntPathRequestMatcher("/users/","POST");
+        RequestMatcher matcherLogin = new AntPathRequestMatcher("/login","POST");
+        RequestMatcher matcherRegisterMachine = new AntPathRequestMatcher("/managedMachines/register","POST");
+        RequestMatcher matcherJar = new AntPathRequestMatcher("/jmx/jmxSDK.jar","GET");
+
+        RequestMatcher ignoreList = new OrRequestMatcher(matcherRegister,matcherLogin,matcherRegisterMachine,matcherJar);
+        return new JWTAuthenticationFilter(ignoreList);
     }
+
+
+
+
+
 }

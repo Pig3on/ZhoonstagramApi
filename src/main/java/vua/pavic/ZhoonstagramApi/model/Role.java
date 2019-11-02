@@ -3,13 +3,17 @@ package vua.pavic.ZhoonstagramApi.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Data
-@Table(name = "authorities")
 public class Role {
     @Id
-    @Column(name = "username",unique = true)
-    private String email;
-    private String authority;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_role")
+    private int id;
+    @Column(name = "role_name")
+    private String roleName;
+    @ManyToMany(mappedBy = "roles")
+    List<User> users;
 }
