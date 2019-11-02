@@ -1,16 +1,21 @@
 package vua.pavic.ZhoonstagramApi.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.approval.ApprovalStore;
 import org.springframework.security.oauth2.provider.approval.TokenApprovalStore;
@@ -22,59 +27,33 @@ import vua.pavic.ZhoonstagramApi.services.JdbcUserDetailService;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true, proxyTargetClass = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    @Autowired
-    private ClientDetailsService clientDetailsService;
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-    @Autowired
-    private TokenStore tokenStore;
-    @Autowired
-    public void globalUserDetails(AuthenticationManagerBuilder auth) throws Exception {
-        auth.jdbcAuthentication().dataSource(jdbcTemplate.getDataSource())
-                .rolePrefix("ROLE_");
-                //.withUser("marin.pavic@pavic.com")
-              //  .password("$2y$12$5AVziLjUUbWdq6NAra.fleTomvNg3YYjmTIjEdILwuu2Ot/qnpqzK").roles("ADMIN","FREE");
 
+    private final UserDetailsService userDetailsService;
+
+    public SecurityConfig(CustomAuthenticationEntryPoint customAuthenticationEntryPoint, @Qualifier("jdbcUserDetailService")
+            UserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
     }
+
+    @Bean
+    public DaoAuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setPasswordEncoder(passwordEncoder());
+        provider.setUserDetailsService(userDetailsService);
+        return provider;
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
     @Bean
     @Override
-    public UserDetailsService userDetailsServiceBean() throws Exception {
-        return new JdbcUserDetailService();
-    }
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.headers().frameOptions().disable().and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .csrf().disable()
-                .authorizeRequests()
-                .antMatchers("/about").permitAll()
-                .antMatchers("/signup").permitAll()
-                .antMatchers("/oauth/token").permitAll()
-                .antMatchers("/h2-console").permitAll()
-                .antMatchers("/swagger-ui.html").permitAll()
-                //.antMatchers("/api/**").authenticated()
-                //.antMatchers("/api/**").hasRole("USER")
-                .anyRequest().permitAll();
-    }
-
-
-    @Override
-    @Bean
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
 
-    @Bean
-    @Autowired
-    public TokenStoreUserApprovalHandler userApprovalHandler(TokenStore tokenStore){
-        TokenStoreUserApprovalHandler handler = new TokenStoreUserApprovalHandler();
-        handler.setTokenStore(tokenStore);
-        handler.setRequestFactory(new DefaultOAuth2RequestFactory(clientDetailsService));
-        handler.setClientDetailsService(clientDetailsService);
-        return handler;
-    }
 }

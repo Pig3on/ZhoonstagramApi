@@ -15,4 +15,7 @@ public class User {
     @Column(name= "password")
     private String hash;
     private boolean enabled;
+    @Enumerated(EnumType.STRING)
+    private UserRoleEnum role;
+
 }

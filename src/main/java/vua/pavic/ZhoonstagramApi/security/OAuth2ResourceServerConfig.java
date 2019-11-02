@@ -18,21 +18,29 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 @Configuration
 @EnableResourceServer
 public class OAuth2ResourceServerConfig extends ResourceServerConfigurerAdapter {
-    @Autowired
-    TokenStore tokenStore;
-    @Autowired
-    DefaultTokenServices services;
-    private static final String SECURE_KEY = "pX4u6ToSW6";
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+
+    public OAuth2ResourceServerConfig(CustomAuthenticationEntryPoint customAuthenticationEntryPoint) {
+        this.customAuthenticationEntryPoint = customAuthenticationEntryPoint;
+    }
+
     @Override
-    public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
-        resources.tokenServices(services);
+    public void configure(ResourceServerSecurityConfigurer resources) {
+        resources.resourceId("api");
     }
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        http.anonymous().disable()
-                .requestMatchers().antMatchers("/api/**")
-                .and().authorizeRequests()
-                .antMatchers("/api/**").access("hasRole('ADMIN') or hasRole('FREE')");
+        http
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .antMatcher("/api/**")
+                .authorizeRequests()
+                .antMatchers("/api/signin**").permitAll()
+                .antMatchers("/api/signin/**").permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .cors().and().csrf().disable()
+                .exceptionHandling().authenticationEntryPoint(customAuthenticationEntryPoint).accessDeniedHandler(new CustomAccessDeniedHandler());
     }
 }

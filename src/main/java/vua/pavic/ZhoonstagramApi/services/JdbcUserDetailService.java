@@ -1,14 +1,19 @@
 package vua.pavic.ZhoonstagramApi.services;
 
 import org.bouncycastle.crypto.generators.BCrypt;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User.UserBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 import vua.pavic.ZhoonstagramApi.db.UserRepository;
 import vua.pavic.ZhoonstagramApi.model.User;
 
+import java.util.Arrays;
+@Service
 public class JdbcUserDetailService implements UserDetailsService {
     @Autowired
     UserRepository userRepository;
@@ -16,14 +21,7 @@ public class JdbcUserDetailService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         User user = userRepository.findByEmail(username);
-        UserBuilder builder;
-        if(user != null){
-            builder = org.springframework.security.core.userdetails.User.withUsername(username);
-            builder.password(user.getHash());
-
-        }else{
-            throw new UsernameNotFoundException("User not found");
-        }
-       return builder.build();
+        GrantedAuthority authority = new SimpleGrantedAuthority(user.getRole().name());
+        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getHash(), Arrays.asList(authority));
     }
 }
