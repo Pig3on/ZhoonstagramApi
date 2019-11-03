@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import vua.pavic.ZhoonstagramApi.db.UserRepository;
 import vua.pavic.ZhoonstagramApi.model.User;
 import vua.pavic.ZhoonstagramApi.model.UserRoleEnum;
+import vua.pavic.ZhoonstagramApi.model.api.ApiUser;
 
 @RestController
 @RequestMapping("/api/signin")
@@ -20,10 +21,10 @@ public class SignInController {
     }
 
     @PostMapping
-    User signin(@RequestBody User user) {
+    User signin(@RequestBody ApiUser user) {
         User u = new User();
         u.setEmail(user.getEmail());
-        u.setHash(passwordEncoder.encode(user.getHash()));
+        u.setHash(passwordEncoder.encode(user.getPassword()));
         u.setEnabled(true);
         u.setRole(UserRoleEnum.FREE);
         return repository.save(u);
