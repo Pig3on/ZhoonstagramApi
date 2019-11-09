@@ -1,23 +1,38 @@
 package vua.pavic.ZhoonstagramApi.controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import vua.pavic.ZhoonstagramApi.model.Post;
+import vua.pavic.ZhoonstagramApi.services.PostService;
+
+import java.util.List;
 
 @RestController
-@RequestMapping("api/posts")
+@RequestMapping("api/post")
 public class PostsController {
 
-    @GetMapping("/test")
-
-    public String test() {
-        return "test";
+    @Autowired
+    private PostService postService;
+    @GetMapping
+    public List<Post> get(){
+        return postService.getAllPosts();
+    }
+    @GetMapping("/users/{id}")
+    public List<Post> getByUser(@PathVariable long id){
+        return postService.getPostsByUserId(id);
+    }
+    @GetMapping("/{id}")
+    public Post get(@PathVariable long id){
+        return postService.getPostById(id);
     }
 
-    @GetMapping("/testAdmin")
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public String testAdmin() {
-        return "testAdmin";
+    @PostMapping
+    public Post post(@RequestBody Post p){
+        return postService.updateOrAddPost(p);
+    }
+    @PutMapping
+    public Post put(@RequestBody Post p){
+        return postService.updateOrAddPost(p);
     }
 }
