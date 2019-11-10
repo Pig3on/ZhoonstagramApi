@@ -38,6 +38,8 @@ public class OAuth2ResourceServerConfig extends ResourceServerConfigurerAdapter 
                 .authorizeRequests()
                 .antMatchers("/api/signin**").permitAll()
                 .antMatchers("/api/signin/**").permitAll()
+                .antMatchers("/api/files**").permitAll()
+                .antMatchers("/api/files/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .cors().and().csrf().disable()
