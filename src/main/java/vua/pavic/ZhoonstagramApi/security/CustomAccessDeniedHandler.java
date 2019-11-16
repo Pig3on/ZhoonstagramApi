@@ -10,6 +10,7 @@ import java.io.IOException;
 public class CustomAccessDeniedHandler implements org.springframework.security.web.access.AccessDeniedHandler {
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
-        throw accessDeniedException;
+        response.getWriter().write("User not authenticated");
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
     }
 }

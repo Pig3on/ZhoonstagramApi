@@ -7,4 +7,5 @@ import vua.pavic.ZhoonstagramApi.model.User;
 public interface UserService {
 
     User getUserByid(long id);
+    User getUserByEmail(String email);
 }

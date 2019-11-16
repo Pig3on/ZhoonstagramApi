@@ -2,10 +2,14 @@ package vua.pavic.ZhoonstagramApi.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import vua.pavic.ZhoonstagramApi.model.Post;
+import vua.pavic.ZhoonstagramApi.model.User;
 import vua.pavic.ZhoonstagramApi.services.PostService;
+import vua.pavic.ZhoonstagramApi.services.UserService;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -14,6 +18,8 @@ public class PostsController {
 
     @Autowired
     private PostService postService;
+    @Autowired
+    private UserService userService;
     @GetMapping
     public List<Post> get(){
         return postService.getAllPosts();
@@ -28,7 +34,10 @@ public class PostsController {
     }
 
     @PostMapping
-    public Post post(@RequestBody Post p){
+    public Post post(Authentication authentication, Principal principal, @RequestBody Post p){
+        String pricipalName = principal.getName();
+        User user = userService.getUserByEmail(pricipalName);
+        p.setUser(user);
         return postService.updateOrAddPost(p);
     }
     @PutMapping

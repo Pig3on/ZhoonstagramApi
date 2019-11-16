@@ -33,10 +33,10 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 
     @Override
     public void commence(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException {
-        ApiError apiError = new ApiError(OK);
+        ApiError apiError = new ApiError(UNAUTHORIZED);
 
         ServerHttpResponse outputMessage = new ServletServerHttpResponse(httpServletResponse);
-        outputMessage.setStatusCode(OK);
+        outputMessage.setStatusCode(UNAUTHORIZED);
 
         messageConverter.write(mapper.writeValueAsString(apiError), MediaType.APPLICATION_JSON, outputMessage);
     }

@@ -29,4 +29,9 @@ public class Post {
     orphanRemoval = true)
     @JsonIgnore
     private List<Comment> userComments;
+
+    @Override
+    public String toString() {
+        return "";
+    }
 }

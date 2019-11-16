@@ -39,4 +39,9 @@ public class User {
     @JsonIgnore
     private List<Comment> userComments;
 
+    @Override
+    public String toString() {
+        return "";
+    }
+
 }
