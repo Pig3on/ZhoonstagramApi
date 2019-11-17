@@ -1,6 +1,7 @@
 package vua.pavic.ZhoonstagramApi.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -34,8 +35,15 @@ public class OAuth2ResourceServerConfig extends ResourceServerConfigurerAdapter 
         http
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .antMatcher("/api/**")
                 .authorizeRequests()
+                .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+                .antMatchers("/swagger-resources**").permitAll()
+                .antMatchers("/swagger-resources/**").permitAll()
+                .antMatchers("/static/**").permitAll()
+                .antMatchers("/swagger-ui.html").permitAll()
+                .antMatchers("/v2/**").permitAll()
+                .antMatchers("/portal**").permitAll()
+                .antMatchers("/portal/**").permitAll()
                 .antMatchers("/api/signin**").permitAll()
                 .antMatchers("/api/signin/**").permitAll()
                 .antMatchers("/api/files**").permitAll()
