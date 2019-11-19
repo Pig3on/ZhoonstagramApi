@@ -1,5 +1,8 @@
 package vua.pavic.ZhoonstagramApi.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.access.AccessDeniedException;
 
 import javax.servlet.ServletException;
@@ -8,9 +11,16 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class CustomAccessDeniedHandler implements org.springframework.security.web.access.AccessDeniedHandler {
+
+
+    @Autowired
+    MessageSource messageSource;
+
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
-        response.getWriter().write("User not authenticated");
+        String message = messageSource.getMessage("error.notFound", null, LocaleContextHolder.getLocale());
+
+        response.getWriter().write(message);
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
     }
 }

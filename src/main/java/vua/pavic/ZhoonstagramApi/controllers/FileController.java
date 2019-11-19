@@ -34,7 +34,7 @@ public class FileController {
             throw new CantSaveException();
         }
 
-        return new FileUploadResponse(file.getOriginalFilename());
+       return new FileUploadResponse(file.getOriginalFilename());
     }
     @GetMapping("/{filename}")
     public ResponseEntity<byte[]> serveImage(@PathVariable String filename, HttpServletResponse response){

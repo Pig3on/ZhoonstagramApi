@@ -34,7 +34,7 @@ public class PostsController {
     }
 
     @PostMapping
-    public Post post(Authentication authentication, Principal principal, @RequestBody Post p){
+    public Post post(Principal principal, @RequestBody Post p){
         String pricipalName = principal.getName();
         User user = userService.getUserByEmail(pricipalName);
         p.setUser(user);
