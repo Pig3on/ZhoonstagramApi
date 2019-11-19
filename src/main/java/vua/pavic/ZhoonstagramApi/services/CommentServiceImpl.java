@@ -22,7 +22,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public List<Comment> getCommentsByUserId(long id) {
-        User u  = userRepository.getOne(id);
+        User u  = userRepository.findById(id);
         return commentRepository.findAllByUser(u);
     }
 
