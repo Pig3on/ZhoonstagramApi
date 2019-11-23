@@ -30,6 +30,13 @@ public class Post {
     @JsonIgnore
     private List<Comment> userComments;
 
+    public Post(long id) {
+        this.id = id;
+    }
+
+    public Post() {
+    }
+
     @Override
     public String toString() {
         return "";

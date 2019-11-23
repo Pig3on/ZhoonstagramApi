@@ -7,8 +7,10 @@ import vua.pavic.ZhoonstagramApi.model.User;
 
 import java.util.List;
 
-public interface CommentRepository extends JpaRepository<Comment,Long> {
+public interface CommentRepository {
 
-    List<Comment> findAllByUser(User u);
     List<Comment> findAllByPost(Post p);
+    Comment save(Comment c);
+    Comment getOne(long id);
+
 }

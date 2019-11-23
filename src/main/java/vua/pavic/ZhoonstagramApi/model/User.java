@@ -39,6 +39,13 @@ public class User {
     @JsonIgnore
     private List<Comment> userComments;
 
+    public User(long id) {
+        this.id = id;
+    }
+
+    public User() {
+    }
+
     @Override
     public String toString() {
         return "";

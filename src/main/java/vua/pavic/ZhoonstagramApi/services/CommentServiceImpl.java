@@ -21,12 +21,6 @@ public class CommentServiceImpl implements CommentService {
     private CommentRepository commentRepository;
 
     @Override
-    public List<Comment> getCommentsByUserId(long id) {
-        User u  = userRepository.getOne(id);
-        return commentRepository.findAllByUser(u);
-    }
-
-    @Override
     public List<Comment> getCommentsByPostId(long id) {
         Post p = postRepository.getOne(id);
         return commentRepository.findAllByPost(p);
@@ -39,11 +33,8 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Comment updateOrAddComment(Comment comment) {
+
         return commentRepository.save(comment);
     }
 
-    @Override
-    public void deleteComment(long id) {
-        commentRepository.deleteById(id);
-    }
 }
