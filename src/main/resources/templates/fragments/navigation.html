@@ -18,8 +18,30 @@
             <li class="nav-item">
                 <a class="nav-link" href="/swagger-ui.html">Docs</a>
             </li>
+
         </ul>
-    </div>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+            Change language
+        </button>
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Change Language</h5>
+                    </div>
+                    <div class="modal-body">
+                        <select id="language-select" class="custom-select">
+                            <option selected value="en_US">English</option>
+                            <option value="hr">Croatian</option>
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="language-change" class="btn btn-primary">Change</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>'
 </nav>
 </body>
 </html>
