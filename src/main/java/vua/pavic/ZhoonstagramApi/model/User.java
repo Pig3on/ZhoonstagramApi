@@ -3,12 +3,15 @@ package vua.pavic.ZhoonstagramApi.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Table(name = "users")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class User {
@@ -44,11 +47,6 @@ public class User {
     }
 
     public User() {
-    }
-
-    @Override
-    public String toString() {
-        return "";
     }
 
 }

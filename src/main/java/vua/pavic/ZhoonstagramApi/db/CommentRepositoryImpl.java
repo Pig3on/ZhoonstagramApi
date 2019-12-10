@@ -25,13 +25,13 @@ public class CommentRepositoryImpl implements CommentRepository {
     public CommentRepositoryImpl(JdbcTemplate template) {
         this.template = template;
         this.insertComment = new SimpleJdbcInsert(template)
-                .withTableName("comment")
+                .withTableName("comments")
                 .usingGeneratedKeyColumns("id");
     }
 
     @Override
     public List<Comment> findAllByPost(Post p) {
-        return template.query("select id, text, user_id, post_id from comment where post_id = ?", this::mapRowToComment, p.getId());
+        return template.query("select id, text, user_id, post_id from comments where post_id = ?", this::mapRowToComment, p.getId());
     }
 
     @Override
@@ -42,7 +42,7 @@ public class CommentRepositoryImpl implements CommentRepository {
 
     @Override
     public Comment getOne(long id) {
-        return template.queryForObject("select id, text, user_id, post_id from comment where id = ?", this::mapRowToComment, id);
+        return template.queryForObject("select id, text, user_id, post_id from comments where id = ?", this::mapRowToComment, id);
     }
 
     private long saveCommentDetails(Comment comment) {

@@ -18,7 +18,7 @@ values ( 200, 'test',223,'smth.jpg','some title',1);
 -- insert into post(comments, description, likes, picture, title, user_id)
 -- values ( 200, 'test',223,'','some title',1);
 
-insert into comment(text, post_id, user_id)
+insert into comments(text, post_id, user_id)
 values ( 'this is some stuff',1,1);
 
 

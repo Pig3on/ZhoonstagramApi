@@ -3,16 +3,19 @@ package vua.pavic.ZhoonstagramApi.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.List;
-@Data
+@Getter
+@Setter
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     private String picture;
     private String description;
     private String title;
@@ -35,10 +38,5 @@ public class Post {
     }
 
     public Post() {
-    }
-
-    @Override
-    public String toString() {
-        return "";
     }
 }
