@@ -1,6 +1,5 @@
 package vua.pavic.ZhoonstagramApi;
 
-import javafx.geometry.Pos;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

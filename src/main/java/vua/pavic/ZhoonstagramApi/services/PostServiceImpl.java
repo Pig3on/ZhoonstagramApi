@@ -42,4 +42,16 @@ public class PostServiceImpl implements PostService {
     public void deletePost(long id) {
         postRepository.deleteById(id);
     }
+
+    @Override
+    public List<Post> getAllReportedPosts() {
+        return postRepository.findReportedPosts(30);
+    }
+
+    @Override
+    public void deleteMany(List<Post> posts) {
+        posts.forEach((post -> {
+            postRepository.deleteById(post.getId());
+        }));
+    }
 }

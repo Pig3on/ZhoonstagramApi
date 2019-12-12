@@ -13,6 +13,8 @@ public interface PostService {
     Post getPostById(long id);
     Post updateOrAddPost(Post id);
     void deletePost(long id);
+    List<Post> getAllReportedPosts();
+    void deleteMany(List<Post> posts);
 
 
 }

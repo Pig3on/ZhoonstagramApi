@@ -3,6 +3,9 @@ values ( 'miro@miro.com',1,'$2a$10$.9rRB6hrHmd3Me6Rv4dDv.omhK8QQQxvCU2uVa3jh83AY
 
 insert into post(comments, description, likes, picture, title, user_id)
 values ( 200, 'test',223,'smth.jpg','some title',1);
+
+insert into post(comments, description, likes, picture, title, user_id)
+values ( 200, 'test',10,'smth.jpg','some title',1);
 -- insert into post(comments, description, likes, picture, title, user_id)
 -- values ( 200, 'test',223,'','some title',1);
 -- insert into post(comments, description, likes, picture, title, user_id)
