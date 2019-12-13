@@ -8,7 +8,7 @@ import vua.pavic.ZhoonstagramApi.model.UserRoleEnum;
 import vua.pavic.ZhoonstagramApi.model.api.ApiUser;
 
 @RestController
-@RequestMapping("/api/signin")
+@RequestMapping("api/signin")
 public class SignInController {
 
     private final UserRepository repository;
@@ -21,7 +21,7 @@ public class SignInController {
     }
 
     @PostMapping
-    User signin(@RequestBody ApiUser user) {
+    User post(@RequestBody ApiUser user) {
         User u = new User();
         u.setEmail(user.getEmail());
         u.setHash(passwordEncoder.encode(user.getPassword()));

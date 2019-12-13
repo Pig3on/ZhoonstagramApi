@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 
 @Repository
@@ -20,6 +21,9 @@ public class CommentRepositoryImpl implements CommentRepository {
 
     JdbcTemplate template;
     SimpleJdbcInsert insertComment;
+
+    @Autowired
+    UserRepository userRepository;
 
     @Autowired
     public CommentRepositoryImpl(JdbcTemplate template) {
@@ -61,8 +65,13 @@ public class CommentRepositoryImpl implements CommentRepository {
         exercise.setId(rs.getLong("id"));
         exercise.setText(rs.getString(("text")));
         exercise.setPost(new Post(rs.getLong("post_id")));
-        exercise.setUser(new User(rs.getLong("user_id")));
-
+        Long id = rs.getLong("user_id");
+        Optional<User> user = userRepository.findById(id);
+        if(user.isPresent()){
+            exercise.setUser(user.get());
+        }else{
+            exercise.setUser(new User(rs.getLong("user_id")));
+        }
         return exercise;
     }
 

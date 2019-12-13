@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <th:block th:insert="fragments/boostrap"/>
+</head>
+<body>
+<div th:insert="fragments/navigation"/>
+<div class="d-flex flex-column justify-content-center align-items-center">
+    <div class="w-50 mt-5">
+        <h1 class="text-center mb-5" th:text="#{portal.about.title}">Zhoonstagram - Instagram with a twist...</h1>
+        <p class="mb-3" th:text="#{portal.about.explain}">
+            Have you ever just wanted to scroll trough some pigeon images, but your annoying friend Becky keeps posting dumb images of food or her cat/dog.
+            Total enjoyment killer.
+        </p>
+        <h3 class="mb-3 text-center" th:text="#{portal.about.solution}">We have the solution</h3>
+        <h4 class="mb-3 text-center" th:text="#{portal.about.introduce}">Introducing, Zhoonstagram!!!</h4>
+        <p class="mb-5" th:text="#{portal.about.explenation}">Zhoonstagram is a new revolutionary app that completely changes how you view pigeons.
+            The app uses advanced algorithms and machine learning to determine is the image you are trying to post, an image of a pigeon.
+            Or something booring, like food or lifestyle.</p>
+        <h5 class="text-center" th:text="#{portal.about.ifNoZhoon}">If the image does not contain a pigeon its automatically:</h5>
+        <h2 class="text-center text-danger mb-5"><b th:text="#{portal.about.rejected}">REJECTED</b></h2>
+        <h5 class="text-center text-success" th:text="#{portal.about.reassurance}">By using our app you can be sure that all you will see scrolling trough are pigeons</h5>
+    </div>
+
+</div>
+</body>
+</html>
