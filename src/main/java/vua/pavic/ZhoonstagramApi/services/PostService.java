@@ -15,6 +15,5 @@ public interface PostService {
     void deletePost(long id);
     List<Post> getAllReportedPosts();
     void deleteMany(List<Post> posts);
-
-
+    void reportPost(String email, long postId);
 }

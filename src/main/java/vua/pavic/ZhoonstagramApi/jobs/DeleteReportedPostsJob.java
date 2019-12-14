@@ -20,7 +20,8 @@ public class DeleteReportedPostsJob extends QuartzJobBean {
     @Override
     protected void executeInternal(org.quartz.JobExecutionContext context) throws JobExecutionException {
         List<Post> postsToDelete = service.getAllReportedPosts();
-        service.deleteMany(postsToDelete);
-        System.out.println("I HAVE DELETED SHIIIIIIIT");
+        if(postsToDelete.size() > 0) {
+            service.deleteMany(postsToDelete);
+        }
     }
 }

@@ -20,6 +20,7 @@ public class Post {
     private String description;
     private String title;
     private long likes;
+    private long reports;
     private long comments;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -27,6 +28,9 @@ public class Post {
     @ManyToMany(mappedBy = "likedPosts")
     @JsonIgnore
     private List<User> userLikes;
+    @ManyToMany(mappedBy = "reportedPosts")
+    @JsonIgnore
+    private List<User> userReports;
     @OneToMany(mappedBy = "post",
     cascade = CascadeType.ALL,
     orphanRemoval = true)

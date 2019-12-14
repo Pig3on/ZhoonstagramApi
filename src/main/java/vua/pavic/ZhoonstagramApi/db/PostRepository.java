@@ -11,7 +11,7 @@ import java.util.List;
 public interface PostRepository extends JpaRepository<Post,Long> {
 
     List<Post> findAllByUser(User u);
-    @Query("SELECT p FROM Post p WHERE p.likes > 30")
+    @Query("SELECT p FROM Post p WHERE p.reports > 15")
     List<Post> findReportedPosts();
 
 }

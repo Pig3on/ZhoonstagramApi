@@ -8,6 +8,7 @@ import vua.pavic.ZhoonstagramApi.model.Post;
 import vua.pavic.ZhoonstagramApi.model.User;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PostServiceImpl implements PostService {
@@ -53,5 +54,18 @@ public class PostServiceImpl implements PostService {
         posts.forEach((post -> {
             postRepository.deleteById(post.getId());
         }));
+    }
+
+    @Override
+    public void reportPost(String email, long postId) {
+        User user  = userRepository.findByEmail(email);
+        Optional<Post> p = postRepository.findById(postId);
+        if(p.isPresent() &&  !user.getReportedPosts().contains(p.get())){
+            Post post = p.get();
+            user.getReportedPosts().add(post);
+            post.setReports(post.getReports() + 1);
+            userRepository.save(user);
+            postRepository.save(post);
+        }
     }
 }

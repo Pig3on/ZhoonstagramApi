@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity
@@ -19,8 +21,11 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @Column(name = "username")
+    @NotNull
+    @Email
     private String email;
     @Column(name= "password")
+    @NotNull
     private String hash;
     private boolean enabled;
     @Enumerated(EnumType.STRING)
@@ -36,6 +41,12 @@ public class User {
             inverseJoinColumns = @JoinColumn(name="post_id"))
     @JsonIgnore
     private  List<Post> likedPosts;
+    @ManyToMany
+    @JoinTable(name = "user_reports",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name="post_id"))
+    @JsonIgnore
+    private  List<Post> reportedPosts;
     @OneToMany(mappedBy = "user",
             cascade = CascadeType.ALL,
             orphanRemoval = true)
