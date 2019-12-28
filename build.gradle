@@ -26,6 +26,7 @@ dependencies {
 	implementation 'org.springframework.security:spring-security-oauth2-client'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation group: 'org.tensorflow', name: 'tensorflow', version: '1.15.0'
+	implementation 'org.python:jython-slim:2.7.2b2'
 	implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
 	implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
 	implementation group: 'org.springframework', name: 'spring-context-support', version: '5.2.2.RELEASE'

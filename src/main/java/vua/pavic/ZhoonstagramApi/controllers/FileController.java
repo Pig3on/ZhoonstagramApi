@@ -1,5 +1,8 @@
 package vua.pavic.ZhoonstagramApi.controllers;
 
+import org.python.core.PyObject;
+import org.python.core.PyString;
+import org.python.util.PythonInterpreter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -11,14 +14,16 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.tensorflow.SavedModelBundle;
 import org.tensorflow.Tensor;
+import sun.misc.IOUtils;
 import vua.pavic.ZhoonstagramApi.errors.CantSaveException;
 import vua.pavic.ZhoonstagramApi.model.api.FileUploadResponse;
+import vua.pavic.ZhoonstagramApi.services.PigeonDetectionService;
 
 import javax.activation.FileTypeMap;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -31,6 +36,9 @@ public class FileController {
     ServletContext context;
     @Autowired
     ResourceLoader resourceLoader;
+    @Autowired
+    PigeonDetectionService pigeonDetectionService;
+
     @PostMapping
     public FileUploadResponse handleFileUpload(@RequestParam("file") MultipartFile file){
         File fileToSave = new File(context.getRealPath("resources/uploads") +"/"+ file.getOriginalFilename());
@@ -39,13 +47,10 @@ public class FileController {
         }
         try {
             file.transferTo(fileToSave);
-            Resource resource = new ClassPathResource("saved_model.pb");
-            String pathToModel = resource.getFile().getParent();
-            SavedModelBundle model = SavedModelBundle.load(pathToModel, "serve");
-            Tensor<File> tensor = model.session().runner().fetch("input_blob")
-                        .feed("x", Tensor.<File>create(file, File.class))
-                        .run().get(0).expect(File.class);
-                System.out.println(tensor.intValue());
+            if(!pigeonDetectionService.isPigeon(fileToSave)){
+                fileToSave.delete();
+                throw new CantSaveException("Not a Pigeon");
+            }
         } catch (IOException e) {
             throw new CantSaveException();
         }
