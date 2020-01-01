@@ -29,12 +29,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User addUser(ApiUser user) {
-        User u = new User();
-        u.setEmail(user.getEmail());
-        u.setHash(passwordEncoder.encode(user.getPassword()));
-        u.setEnabled(true);
-        u.setRole(UserRoleEnum.ADMIN);
-
+        User u = new User.UserBuilder()
+                .withEmail(user.getEmail())
+                .withPassword(user.getPassword())
+                .asFreeUser()
+                .build();
         return userRepository.save(u);
     }
 }

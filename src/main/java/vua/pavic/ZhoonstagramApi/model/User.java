@@ -59,5 +59,47 @@ public class User {
 
     public User() {
     }
+    private User(UserBuilder userBuilder) {
+        this.id = userBuilder.id;
+        this.email = userBuilder.email;
+        this.enabled = userBuilder.enabled;
+        this.hash = userBuilder.hash;
+        this.role = userBuilder.role;
+    }
 
+    public static class UserBuilder {
+        private long id;
+        private String email;
+        private String hash;
+        private boolean enabled;
+        private UserRoleEnum role;
+
+        public UserBuilder() {
+            id = 0;
+            enabled = true;
+        }
+        public UserBuilder withEmail(String email){
+             this.email = email;
+             return this;
+        }
+        public UserBuilder withPassword(String password){
+            this.hash = password;
+            return this;
+        }
+        public UserBuilder asFreeUser(){
+            this.role = UserRoleEnum.FREE;
+            return this;
+        }
+        public UserBuilder asAdminUser(){
+            this.role = UserRoleEnum.ADMIN;
+            return this;
+        }
+        public UserBuilder asPlatinumUser(){
+            this.role = UserRoleEnum.PLATINUM;
+            return this;
+        }
+        public User build() {
+            return new User(this);
+        }
+    }
 }

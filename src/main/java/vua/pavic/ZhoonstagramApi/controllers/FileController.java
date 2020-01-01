@@ -17,6 +17,8 @@ import org.tensorflow.Tensor;
 import sun.misc.IOUtils;
 import vua.pavic.ZhoonstagramApi.errors.CantSaveException;
 import vua.pavic.ZhoonstagramApi.model.api.FileUploadResponse;
+import vua.pavic.ZhoonstagramApi.services.FileService;
+import vua.pavic.ZhoonstagramApi.services.ImageProcessingService;
 import vua.pavic.ZhoonstagramApi.services.PigeonDetectionService;
 
 import javax.activation.FileTypeMap;
@@ -37,36 +39,23 @@ public class FileController {
     @Autowired
     ResourceLoader resourceLoader;
     @Autowired
-    PigeonDetectionService pigeonDetectionService;
+    ImageProcessingService imageProcessingService;
+    @Autowired
+    FileService fileService;
 
     @PostMapping
     public FileUploadResponse handleFileUpload(@RequestParam("file") MultipartFile file){
-        File fileToSave = new File(context.getRealPath("resources/uploads") +"/"+ file.getOriginalFilename());
-        if(!fileToSave.exists()){
-            fileToSave.mkdirs();
-        }
-        try {
-            file.transferTo(fileToSave);
-            if(!pigeonDetectionService.isPigeon(fileToSave)){
-                fileToSave.delete();
-                throw new CantSaveException("Not a Pigeon");
-            }
-        } catch (IOException e) {
-            throw new CantSaveException();
-        }
-
+        imageProcessingService.processImage(file);
        return new FileUploadResponse(file.getOriginalFilename());
     }
     @GetMapping("/{filename}")
-    public ResponseEntity<byte[]> serveImage(@PathVariable String filename, HttpServletResponse response){
-        File img = new File(context.getRealPath("resources/uploads") +"/"+ filename);
+    public ResponseEntity<byte[]> serveImage(@PathVariable String filename){
+        File img = fileService.getFile(filename);
         try {
             return ResponseEntity
                     .ok()
                     .contentType(MediaType.valueOf(FileTypeMap.getDefaultFileTypeMap().getContentType(img)))
                     .body(Files.readAllBytes(img.toPath()));
-
-
         } catch (IOException e) {
             throw new CantSaveException();
         }
