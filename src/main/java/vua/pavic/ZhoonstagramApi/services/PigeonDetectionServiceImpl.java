@@ -12,7 +12,7 @@ import java.net.*;
 @Service
 public class PigeonDetectionServiceImpl implements PigeonDetectionService {
     @Override
-    public boolean isPigeon(File file) {
+    public double isPigeon(File file) {
        try {
            URL url = new URL("http://localhost:5000/detect?file_name="+ URLEncoder.encode(file.getAbsolutePath(),java.nio.charset.StandardCharsets.UTF_8.toString()));
            HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -32,10 +32,10 @@ public class PigeonDetectionServiceImpl implements PigeonDetectionService {
 
            String certainty = content.toString();
            double decimalCertainty = Double.parseDouble(certainty);
-           return !(decimalCertainty < 0.95);
+           return decimalCertainty;
 
        }catch(IOException e) {
-           return false;
+           return 0;
         }
     }
 }

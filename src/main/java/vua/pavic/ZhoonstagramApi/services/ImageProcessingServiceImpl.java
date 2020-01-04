@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import vua.pavic.ZhoonstagramApi.errors.NotAPigeonException;
+import vua.pavic.ZhoonstagramApi.utils.PigeonVisitor;
+import vua.pavic.ZhoonstagramApi.utils.VisitableImage;
 
 import java.io.File;
 @Service
@@ -20,9 +22,11 @@ public class ImageProcessingServiceImpl implements ImageProcessingService {
 
     @Override
     public void processImage(MultipartFile image) {
-        File savedFile = fileService.saveFile(image);
-        if (!pigeonDetectionService.isPigeon(savedFile)) {
-            savedFile.delete();
+        VisitableImage savedFile = new VisitableImage(fileService.saveFile(image));
+        PigeonVisitor pigeonVisitor = new PigeonVisitor(pigeonDetectionService);
+        savedFile.accept(pigeonVisitor);
+        if (!pigeonVisitor.isPigeon()) {
+            savedFile.getImage().delete();
             throw new NotAPigeonException("This image is not of a pigeon");
         }
     }

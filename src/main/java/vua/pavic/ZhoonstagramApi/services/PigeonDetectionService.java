@@ -7,5 +7,5 @@ import java.net.ProtocolException;
 
 public interface PigeonDetectionService {
 
-    boolean isPigeon(File file);
+    double isPigeon(File file);
 }
