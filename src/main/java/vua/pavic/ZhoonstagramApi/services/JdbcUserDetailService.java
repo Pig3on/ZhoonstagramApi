@@ -21,7 +21,9 @@ public class JdbcUserDetailService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         User user = userRepository.findByEmail(username);
-
+        if(user == null){
+            throw new UsernameNotFoundException(username);
+        }
         GrantedAuthority authority = new SimpleGrantedAuthority(user.getRole().name());
         return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getHash(), Arrays.asList(authority));
     }

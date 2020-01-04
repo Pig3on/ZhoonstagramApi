@@ -94,12 +94,13 @@ def detectPigeons(file_name):
     return scores[0][0]
 
 
-from flask import Flask, jsonify,abort
+from flask import Flask, jsonify,abort, request
 
 app = Flask(__name__)
 
-@app.route('/<string:file_name>', methods=['GET'])
-def index(file_name):
+@app.route('/detect', methods=['GET'])
+def index():
+    file_name = request.args.get('file_name')
     try:
         isZhoonCertanty = str(detectPigeons(file_name))
     except:

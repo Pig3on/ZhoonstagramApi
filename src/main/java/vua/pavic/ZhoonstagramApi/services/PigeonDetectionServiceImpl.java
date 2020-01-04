@@ -7,17 +7,14 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URL;
+import java.net.*;
 
 @Service
 public class PigeonDetectionServiceImpl implements PigeonDetectionService {
     @Override
     public boolean isPigeon(File file) {
        try {
-           URL url = new URL("http://localhost:5000/"+file.getAbsolutePath());
+           URL url = new URL("http://localhost:5000/detect?file_name="+ URLEncoder.encode(file.getAbsolutePath(),java.nio.charset.StandardCharsets.UTF_8.toString()));
            HttpURLConnection con = (HttpURLConnection) url.openConnection();
            con.setRequestMethod("GET");
 

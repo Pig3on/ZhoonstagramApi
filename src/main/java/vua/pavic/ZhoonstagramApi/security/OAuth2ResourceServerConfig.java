@@ -49,8 +49,7 @@ public class OAuth2ResourceServerConfig extends ResourceServerConfigurerAdapter 
                 .antMatchers("/api/files**").permitAll()
                 .antMatchers("/api/files/**").permitAll()
                 .anyRequest().authenticated()
-                .and()
-                .cors().and().csrf().disable()
+                .and().csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(customAuthenticationEntryPoint).accessDeniedHandler(new CustomAccessDeniedHandler());
     }
 }

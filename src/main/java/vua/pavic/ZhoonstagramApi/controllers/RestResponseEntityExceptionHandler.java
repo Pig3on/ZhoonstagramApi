@@ -8,11 +8,13 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import vua.pavic.ZhoonstagramApi.errors.CantSaveException;
+import vua.pavic.ZhoonstagramApi.errors.NotAPigeonException;
+
 @ControllerAdvice
 public class RestResponseEntityExceptionHandler
         extends ResponseEntityExceptionHandler {
     @ExceptionHandler(value
-            = { CantSaveException.class })
+            = { CantSaveException.class, NotAPigeonException.class, Exception.class})
     protected ResponseEntity<Object> handleConflict(
             RuntimeException ex, WebRequest request) {
         String bodyOfResponse = "ERROR: " + ex.getMessage();
