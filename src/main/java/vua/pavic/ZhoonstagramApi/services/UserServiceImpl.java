@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService {
     public User addUser(ApiUser user) {
         User u = new User.UserBuilder()
                 .withEmail(user.getEmail())
-                .withPassword(user.getPassword())
+                .withPassword(passwordEncoder.encode(user.getPassword()))
                 .asFreeUser()
                 .build();
         return userRepository.save(u);

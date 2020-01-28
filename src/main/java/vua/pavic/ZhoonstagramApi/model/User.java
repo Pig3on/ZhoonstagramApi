@@ -74,6 +74,7 @@ public class User {
         private boolean enabled;
         private UserRoleEnum role;
 
+        // builder
         public UserBuilder() {
             id = 0;
             enabled = true;

@@ -22,6 +22,7 @@ public class ImageProcessingServiceImpl implements ImageProcessingService {
 
     @Override
     public void processImage(MultipartFile image) {
+        // facade
         VisitableImage savedFile = fileService.saveImage(image);
         PigeonVisitor pigeonVisitor = new PigeonVisitor(pigeonDetectionService);
         savedFile.accept(pigeonVisitor);

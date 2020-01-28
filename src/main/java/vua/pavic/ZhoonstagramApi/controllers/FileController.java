@@ -22,6 +22,8 @@ import java.nio.file.Files;
 public class FileController {
     @Autowired
     ServletContext context;
+
+    // singleton
     @Autowired
     ResourceLoader resourceLoader;
     @Autowired

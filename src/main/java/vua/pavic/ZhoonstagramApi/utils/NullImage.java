@@ -14,7 +14,7 @@ public class NullImage implements VisitableImage {
     @Autowired
     ServletContext context;
 
-
+ // null pattern
 
     @Override
     public File getImage() {
