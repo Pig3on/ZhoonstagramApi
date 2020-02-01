@@ -23,9 +23,10 @@ public class ImageServiceImpl implements ImageFileService {
 
     @Override
     public VisitableImage saveImage(MultipartFile file) {
+        File root = new File(context.getRealPath("resources/uploads"));
         File fileToSave = new File(context.getRealPath("resources/uploads") +"/"+ file.getOriginalFilename());
-        if(!fileToSave.exists()){
-            fileToSave.mkdirs();
+        if(!root.exists()){
+            root.mkdirs();
         }
         try {
             file.transferTo(fileToSave);

@@ -1,4 +1,4 @@
-package vua.pavic.ZhoonstagramApi;
+package vua.pavic.ZhoonstagramApi.services;
 
 import org.junit.Before;
 import org.junit.Test;

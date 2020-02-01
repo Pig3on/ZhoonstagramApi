@@ -1,4 +1,4 @@
-package vua.pavic.ZhoonstagramApi;
+package vua.pavic.ZhoonstagramApi.repository;
 
 import org.assertj.core.api.Assertions;
 import org.junit.Test;

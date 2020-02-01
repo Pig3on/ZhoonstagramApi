@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 @Getter
 @Setter
@@ -17,7 +18,9 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String picture;
+    @NotNull(message = "{validation.noData}")
     private String description;
+    @NotNull(message = "{validation.noData}")
     private String title;
     private long likes;
     private long reports;

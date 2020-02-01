@@ -3,6 +3,7 @@ package vua.pavic.ZhoonstagramApi.controllers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,7 @@ import vua.pavic.ZhoonstagramApi.model.User;
 import vua.pavic.ZhoonstagramApi.services.PostService;
 import vua.pavic.ZhoonstagramApi.services.UserService;
 
+import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
 
@@ -36,8 +38,9 @@ public class PostsController {
         return postService.getPostById(id);
     }
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public Post post(Principal principal, @RequestBody Post p){
+    public Post post(Principal principal,@Valid @RequestBody Post p){
         String pricipalName = principal.getName();
         User user = userService.getUserByEmail(pricipalName);
 
@@ -53,7 +56,7 @@ public class PostsController {
         postService.reportPost(email,postId);
     }
     @PutMapping
-    public Post put(@RequestBody Post p){
+    public Post put(@Valid @RequestBody Post p){
         return postService.updateOrAddPost(p);
     }
 }
