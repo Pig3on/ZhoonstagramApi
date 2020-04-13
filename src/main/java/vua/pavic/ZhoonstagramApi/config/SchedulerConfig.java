@@ -18,7 +18,7 @@ public class SchedulerConfig {
     @Bean
     public Trigger announcementJobTrigger() {
         SimpleScheduleBuilder scheduleBuilder = SimpleScheduleBuilder.simpleSchedule()
-                .withIntervalInMinutes(5).repeatForever();
+                .withIntervalInSeconds(15).repeatForever();
         return TriggerBuilder.newTrigger().forJob(deleteReportedPostsJobDetail())
                 .withIdentity("deleteReportedPosts").withSchedule(scheduleBuilder).build();
     }

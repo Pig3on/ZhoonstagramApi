@@ -34,4 +34,10 @@ public class CommentsController {
     public Comment put(@RequestBody Comment p){
         return commentService.updateOrAddComment(p);
     }
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable long id) {
+        commentService.deleteComment(id);
+    }
+
+
 }

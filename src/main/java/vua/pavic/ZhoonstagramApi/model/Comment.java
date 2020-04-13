@@ -15,7 +15,7 @@ import javax.persistence.*;
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     private String text;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "post_id")

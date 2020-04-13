@@ -33,8 +33,18 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Comment updateOrAddComment(Comment comment) {
+        if(comment.getId() == 0) {
+            return commentRepository.save(comment);
+        }else {
+            commentRepository.update(comment);
+            return comment;
+        }
 
-        return commentRepository.save(comment);
+    }
+
+    @Override
+    public void deleteComment(long id) {
+        commentRepository.delete(id);
     }
 
 }

@@ -10,6 +10,7 @@ import vua.pavic.ZhoonstagramApi.model.User;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +48,32 @@ public class CommentRepositoryImpl implements CommentRepository {
     @Override
     public Comment getOne(long id) {
         return template.queryForObject("select id, text, user_id, post_id from comments where id = ?", this::mapRowToComment, id);
+    }
+
+    @Override
+    public void update(Comment c) {
+        // define query arguments
+        long id = c.getId();
+        String text = c.getText();
+        String user_id = Long.toString(c.getUser().getId());
+        String post_id = c.getPost().getId().toString();
+        Object[] params = { text, post_id, user_id, id };
+
+
+        // define SQL types of the arguments
+        int[] types = {Types.VARCHAR, Types.BIGINT, Types.BIGINT, Types.BIGINT};
+
+
+        template.update("UPDATE comments SET text = ?, post_id = ?, user_id = ? WHERE id = ?", params, types);
+    }
+
+    @Override
+    public void delete(long id) {
+        Object[] params = { id };
+
+        int[] types = {Types.BIGINT};
+
+        template.update("delete from comments where id = ?", params, types);
     }
 
     private long saveCommentDetails(Comment comment) {

@@ -54,7 +54,7 @@ public class FileControllerTest {
         assertThat(result.getResponse().getContentAsByteArray()).isNotEmpty();
     }
     @Test
-    public void validImageRequest() throws Exception {
+    public void getValidImageRequest() throws Exception {
         MvcResult result = this.mockMvc.perform(get("/api/files/york.png")
                 .contentType(MediaType.MULTIPART_FORM_DATA)
                 .with(csrf())

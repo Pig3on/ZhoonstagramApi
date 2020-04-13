@@ -12,5 +12,7 @@ public interface CommentRepository {
     List<Comment> findAllByPost(Post p);
     Comment save(Comment c);
     Comment getOne(long id);
+    void update(Comment c);
+    void delete(long id);
 
 }
