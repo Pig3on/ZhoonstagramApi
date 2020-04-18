@@ -1,6 +1,9 @@
 insert into users(username, enabled, password, role)
 values ( 'miro@miro.com',1,'$2a$10$.9rRB6hrHmd3Me6Rv4dDv.omhK8QQQxvCU2uVa3jh83AY/8tgx38i','FREE');
 
+insert into users(username, enabled, password, role)
+values ( 'miro1@miro.com',1,'$2a$10$.9rRB6hrHmd3Me6Rv4dDv.omhK8QQQxvCU2uVa3jh83AY/8tgx38i','FREE');
+
 -- insert into post(comments, description, likes, picture, title, user_id, reports)
 -- values ( 200, 'test',223,'smth.jpg','some title', 1, 0);
 

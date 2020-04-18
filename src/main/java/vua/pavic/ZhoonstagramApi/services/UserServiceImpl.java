@@ -8,6 +8,8 @@ import vua.pavic.ZhoonstagramApi.model.User;
 import vua.pavic.ZhoonstagramApi.model.UserRoleEnum;
 import vua.pavic.ZhoonstagramApi.model.api.ApiUser;
 
+import java.util.List;
+
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -35,5 +37,10 @@ public class UserServiceImpl implements UserService {
                 .asFreeUser()
                 .build();
         return userRepository.save(u);
+    }
+
+    @Override
+    public List<User> getAll() {
+        return userRepository.findAll();
     }
 }

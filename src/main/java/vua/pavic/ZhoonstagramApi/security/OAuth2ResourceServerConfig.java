@@ -49,6 +49,10 @@ public class OAuth2ResourceServerConfig extends ResourceServerConfigurerAdapter 
                 .antMatchers("/api/files**").permitAll()
                 .antMatchers("/api/files/**").permitAll()
                 .antMatchers("/api/comment/**").permitAll()
+                .antMatchers("/api/post").permitAll()
+                .antMatchers("/api/user").permitAll()
+                .antMatchers("/api/post/**").permitAll()
+                .antMatchers("/api/user/**").permitAll()
                 .anyRequest().authenticated()
                 .and().csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(customAuthenticationEntryPoint).accessDeniedHandler(new CustomAccessDeniedHandler());

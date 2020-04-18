@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 import vua.pavic.ZhoonstagramApi.model.User;
 import vua.pavic.ZhoonstagramApi.services.UserService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
@@ -19,5 +21,10 @@ public class UserController {
     @GetMapping("/{id}")
     public User get(@PathVariable long id){
         return userService.getUserByid(id);
+    }
+
+    @GetMapping
+    public List<User> getAll(){
+        return userService.getAll();
     }
 }
