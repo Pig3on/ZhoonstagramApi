@@ -33,8 +33,8 @@ public class FileController {
 
     @PostMapping
     public FileUploadResponse handleFileUpload(@RequestParam("file") MultipartFile file){
-        imageProcessingService.processImage(file);
-       return new FileUploadResponse(file.getOriginalFilename());
+       File uploaded =  imageProcessingService.processImage(file);
+       return new FileUploadResponse(uploaded.getName());
     }
     @GetMapping("/{filename}")
     public ResponseEntity<byte[]> serveImage(@PathVariable String filename){
