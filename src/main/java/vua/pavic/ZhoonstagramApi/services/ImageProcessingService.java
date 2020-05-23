@@ -6,5 +6,5 @@ import java.io.File;
 
 public interface ImageProcessingService {
 
-    void processImage(MultipartFile file);
+    File processImage(MultipartFile file);
 }

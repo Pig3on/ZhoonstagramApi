@@ -8,6 +8,8 @@ import vua.pavic.ZhoonstagramApi.utils.PigeonVisitor;
 import vua.pavic.ZhoonstagramApi.utils.VisitableImage;
 import vua.pavic.ZhoonstagramApi.utils.VisitableImageImpl;
 
+import java.io.File;
+
 @Service
 public class ImageProcessingServiceImpl implements ImageProcessingService {
 
@@ -21,7 +23,7 @@ public class ImageProcessingServiceImpl implements ImageProcessingService {
     }
 
     @Override
-    public void processImage(MultipartFile image) {
+    public File processImage(MultipartFile image) {
         // facade
         VisitableImage savedFile = fileService.saveImage(image);
         PigeonVisitor pigeonVisitor = new PigeonVisitor(pigeonDetectionService);
@@ -30,6 +32,7 @@ public class ImageProcessingServiceImpl implements ImageProcessingService {
             savedFile.getImage().delete();
             throw new NotAPigeonException("This image is not of a pigeon");
         }
+        return savedFile.getImage();
     }
 }
 
