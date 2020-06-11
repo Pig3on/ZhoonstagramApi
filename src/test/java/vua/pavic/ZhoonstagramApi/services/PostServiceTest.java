@@ -22,7 +22,7 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
-public class PostServiceIntegrationTest {
+public class PostServiceTest {
 
     @TestConfiguration
     static class PostServiceImplTestContextConfiguration {

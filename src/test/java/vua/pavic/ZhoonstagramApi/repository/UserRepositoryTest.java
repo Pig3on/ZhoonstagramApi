@@ -36,7 +36,7 @@ public class UserRepositoryTest {
     UserRepository userRepository;
 
     @Test
-    public void testGetPost() {
+    public void testGetUser() {
         User user = new User(1);
         Optional<User> foundUser = userRepository.findById(user.getId());
         assertNotNull(foundUser);
@@ -44,7 +44,7 @@ public class UserRepositoryTest {
         assertEquals(user.getId(), foundUser.get().getId());
     }
     @Test
-    public void testSavePost() {
+    public void testSaveUser() {
         User user = new User();
         user.setEmail("email@email.com");
         user.setHash("some hash");
@@ -56,7 +56,7 @@ public class UserRepositoryTest {
         assertNotNull(user.getId());
     }
     @Test
-    public void testUpdatePost() {
+    public void testUpdateUser() {
         Optional<User> u = userRepository.findById(1L);
         assertNotNull(u);
         assertThat(u.isPresent());

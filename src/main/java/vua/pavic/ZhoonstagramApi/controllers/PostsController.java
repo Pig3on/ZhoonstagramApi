@@ -15,6 +15,7 @@ import vua.pavic.ZhoonstagramApi.services.UserService;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/post")
@@ -28,10 +29,6 @@ public class PostsController {
     @GetMapping
     public List<Post> get(){
         return postService.getAllPosts();
-    }
-    @GetMapping("/users/{id}")
-    public List<Post> getByUser(@PathVariable long id){
-        return postService.getPostsByUserId(id);
     }
     @GetMapping("/{id}")
     public Post get(@PathVariable long id){
@@ -54,6 +51,11 @@ public class PostsController {
     public void reportPost (Principal principal, @PathVariable long postId){
         String email = principal.getName();
         postService.reportPost(email,postId);
+    }
+    @PostMapping("/users/id")
+    public List<Post> getPostByUser(long userId) {
+        List<Post> allPosts = postService.getAllPosts();
+        return allPosts.stream().filter((post -> post.getUser().getId() == userId)).collect(Collectors.toList());
     }
     @PutMapping
     public Post put(@Valid @RequestBody Post p){

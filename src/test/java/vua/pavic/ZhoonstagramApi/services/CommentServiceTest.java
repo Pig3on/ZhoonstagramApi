@@ -26,7 +26,7 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
-public class CommentIntegrationTest {
+public class CommentServiceTest {
 
     @TestConfiguration
     static class CommentServiceImplTestContextConfiguration {
